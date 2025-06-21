@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
+EnvironmentFile=/etc/default/radxa-poe-fan
 ExecStart=/usr/local/bin/radxa-poe-fancontrol.sh
 Restart=always
 RestartSec=10

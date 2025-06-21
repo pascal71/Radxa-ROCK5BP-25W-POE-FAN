@@ -1,6 +1,0 @@
-sudo vi /etc/systemd/system/radxa-poe-fan.service
-sudo systemctl daemon-reload
-sudo systemctl enable radxa-poe-fan.service
-sudo systemctl start radxa-poe-fan.service
-sudo systemctl status radxa-poe-fan.service
-
