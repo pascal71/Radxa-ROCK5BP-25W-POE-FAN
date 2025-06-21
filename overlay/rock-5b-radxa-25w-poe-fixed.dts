@@ -1,0 +1,108 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	metadata {
+		title = "Enable Radxa 25W PoE+ HAT";
+		category = "misc";
+		compatible = "radxa,rock-5b";
+		description = "Enable Radxa 25W PoE+ HAT with automatic fan control.";
+		exclusive = "GPIO3_A7", "GPIO3_C3";
+		package = "rsetup-config-thermal-governor-step-wise";
+	};
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			radxa-poe-w1 {
+				compatible = "w1-gpio";
+				gpios = <&gpio3 19 0>; /* GPIO3_C3 = 3*8 + 3 = 19 */
+				status = "okay";
+			};
+
+			radxa_poe_fan: radxa-poe-fan {
+				compatible = "pwm-fan";
+				#cooling-cells = <2>;
+				cooling-min-state = <0>;
+				cooling-max-state = <4>;
+				cooling-levels = <0 64 128 192 255>;
+				pwms = <&pwm8 0 40000 1>; /* 25kHz frequency */
+				status = "okay";
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&pwm8>;
+		__overlay__ {
+			status = "okay";
+			pinctrl-0 = <&pwm8m0_pins>;
+		};
+	};
+
+	fragment@2 {
+		target = <&soc_thermal>;
+		__overlay__ {
+			trips {
+				/* Override or add trip points for fan control */
+				fan_trip0: fan-trip0 {
+					temperature = <55000>; /* 55°C */
+					hysteresis = <5000>;
+					type = "active";
+				};
+				
+				fan_trip1: fan-trip1 {
+					temperature = <60000>; /* 60°C */
+					hysteresis = <5000>;
+					type = "active";
+				};
+				
+				fan_trip2: fan-trip2 {
+					temperature = <65000>; /* 65°C */
+					hysteresis = <5000>;
+					type = "active";
+				};
+				
+				fan_trip3: fan-trip3 {
+					temperature = <70000>; /* 70°C */
+					hysteresis = <5000>;
+					type = "active";
+				};
+				
+				fan_trip4: fan-trip4 {
+					temperature = <75000>; /* 75°C */
+					hysteresis = <5000>;
+					type = "active";
+				};
+			};
+
+			cooling-maps {
+				/* Map fan speeds to temperature trip points */
+				fan_map0 {
+					trip = <&fan_trip0>;
+					cooling-device = <&radxa_poe_fan 0 1>;
+				};
+				
+				fan_map1 {
+					trip = <&fan_trip1>;
+					cooling-device = <&radxa_poe_fan 1 2>;
+				};
+				
+				fan_map2 {
+					trip = <&fan_trip2>;
+					cooling-device = <&radxa_poe_fan 2 3>;
+				};
+				
+				fan_map3 {
+					trip = <&fan_trip3>;
+					cooling-device = <&radxa_poe_fan 3 4>;
+				};
+				
+				fan_map4 {
+					trip = <&fan_trip4>;
+					cooling-device = <&radxa_poe_fan 4 4>;
+				};
+			};
+		};
+	};
+};

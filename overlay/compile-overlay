@@ -1,0 +1,1 @@
+dtc -I dts -O dtb -o rock-5b-radxa-25w-poe-fixed.dtbo rock-5b-radxa-25w-poe-fixed.dts

@@ -1,0 +1,12 @@
+[Unit]
+Description=Radxa PoE Fan Control
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/radxa-poe-fancontrol.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
